@@ -1,0 +1,18 @@
+<div class="import">
+  <mat-progress-bar [value]="progressPercentage"></mat-progress-bar>
+  <button mat-button (click)="emptyDatabase()">Empty the database
+    <i class="material-icons">
+      delete
+    </i>
+  </button>
+  <button mat-button (click)="startImport()">Start the import!
+    <i class="material-icons">
+      play_arrow
+    </i>
+  </button>
+  <button mat-button (click)="stopImport()">Stop the import
+    <i class="material-icons">
+      stop
+    </i>
+  </button>
+</div>
