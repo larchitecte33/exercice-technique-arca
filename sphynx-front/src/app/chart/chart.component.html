@@ -11,5 +11,31 @@
       <mat-datepicker #end></mat-datepicker>
     </mat-form-field>
   </div>
+  <div class="datecontainer">
+    <div *ngFor="let granularite of choixGranularite">
+      <input type="radio" name="granularites" value="{{granularite}}" (change)="radioChangeHandler($event)">
+      {{granularite}}
+    </div>
+    <!--<div class="white">
+      <input type="radio" id="rbJour" name="rgGranularite" value="Jour">
+      <label for="rbJour">Jour</label>
+    </div>
+    <div class="white">
+      <input type="radio" id="rbMois" name="rgGranularite" value="Mois">
+      <label for="rbMois">Mois</label>
+    </div>
+    <div class="white">
+      <input type="radio" id="rbAn" name="rgGranularite" value="An">
+      <label for="rbAn">An</label>
+    </div>-->
+    
+    <div class="white">
+      <label for="annee">Choix de l'année : </label>
+      <input type="number" id="annee" name="annee" [(ngModel)]="example" (change)="yearChangeHandler()">
+    </div>
+
+
+    <p>Vous avez sélectionné : {{selectedGranularite}}</p>
+  </div>
   <canvas id="canvas">{{ chart }}</canvas>
 </div>

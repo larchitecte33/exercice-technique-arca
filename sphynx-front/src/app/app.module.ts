@@ -11,6 +11,7 @@ import { AggregateComponent } from './aggregate/aggregate.component';
 import { ChartComponent } from './chart/chart.component';
 import {MaterialModule} from './material.module';
 import {HttpClientModule} from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import {HttpClientModule} from '@angular/common/http';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule
   ],
   providers: [],
