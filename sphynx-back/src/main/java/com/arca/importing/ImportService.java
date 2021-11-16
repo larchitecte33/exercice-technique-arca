@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,7 +63,7 @@ public class ImportService {
 
   public void startImport() {
     isImporting = true;
-    System.out.println("Start import");
+    //System.out.println("Start import");
     // On crée un DataFile représentant un fichier à partir du chemin du fichier lu dans application.properties.
     DataFile dataFile = dataFileFactory.createFromProperties();
     checkThatDataFileExists(dataFile);
@@ -79,26 +80,37 @@ public class ImportService {
       }
 
       String line;
+      ArrayList<Record> records = new ArrayList<>();
+      long presumableFreeMemory, allocatedMemory;
 
       // Tant qu'il reste des lignes à lire
       while ((line = bufr.readLine()) != null && isImporting) {
-        if(lineNumber == 3731) {
-          System.out.println("pause");
-        }
-
         // On construit un Record à partir de la ligne lue
         Record rec = Record.from(line);
 
         // Si le numéro de la ligne lue est divisible par 1000, on envoie la progression du traitement (nombre de lignes
         // lues + total lignes)
-        if (lineNumber % 1000 == 0) { // each 1000 lines
+        /*if (lineNumber % 1000 == 0) { // each 1000 lines
           websocketMessaging.sendProgress(totalNbLines, lineNumber);
+        }*/
+
+        allocatedMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+        presumableFreeMemory = Runtime.getRuntime().maxMemory() - allocatedMemory;
+
+        if (lineNumber % (totalNbLines / 1000000) == 0) {
+          websocketMessaging.sendProgress(totalNbLines, lineNumber + 1);
         }
 
         // On ajoute un Aggregate à la Map aggregates contenue dans aggregation.model.AggrgateService.
         aggregateService.add(Aggregate.from(rec));
-        recordRepositoryService.save(rec);
-        importStatusService.saveImportLineNumber(lineNumber);
+        records.add(rec);
+
+        if(lineNumber % 1000000 == 0) {
+          recordRepositoryService.saveAll(records);
+          importStatusService.saveImportLineNumber(lineNumber);
+          records.clear();
+        }
+
         lineNumber++;
       }
     } catch (IOException e) {
@@ -108,6 +120,8 @@ public class ImportService {
     if(lineNumber >= totalNbLines) {
       websocketMessaging.sendProgress(totalNbLines, totalNbLines);
     }
+
+    System.out.println("L'import est terminé.");
   }
 
   public void stopImport() {

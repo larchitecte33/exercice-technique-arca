@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RecordRepository extends CrudRepository<Record, Long> {
 
-  List<Record> findByTimestampBetween (Long start, Long end);
+  List<Record> findByTimestampBetweenOrderByTimestamp(Long start, Long end);
 }

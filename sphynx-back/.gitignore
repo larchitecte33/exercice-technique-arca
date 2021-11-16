@@ -26,3 +26,7 @@
 /.nb-gradle/
 
 node_modules
+
+src/main/java/com/arca/data.txt
+src/main/java/com/arca/data_leger.txt
+src/main/java/com/arca/data_lourd.txt

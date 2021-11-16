@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,6 +34,8 @@ public class AggregateService {
 
     Long oldValue = aggregates.get(aggregate.getCountry());
     aggregates.put(aggregate.getCountry(), oldValue + aggregate.getAggregateValue());
+
+    //System.out.println(aggregate.getCountry().getName() + " : " + String.valueOf(oldValue + aggregate.getAggregateValue()));
   }
 
   // Retourne la Map aggregates sous forme de liste d'Aggregate.
@@ -45,6 +45,11 @@ public class AggregateService {
       .map(entry -> new Aggregate(entry.getKey(), entry.getValue()))
       .collect(Collectors.toList());
 
+    /*for(int i = 0 ; i < listeAggregate.size() ; i++) {
+      System.out.println("CountryName : " + listeAggregate.get(i).getCountry().getName());
+      System.out.println("Value : " + listeAggregate.get(i).getAggregateValue());
+    }*/
+
     return listeAggregate;
   }
 
@@ -53,16 +58,31 @@ public class AggregateService {
     Long startDateMillis = DateConverter.toMillis(startDate);
     Long endDateMillis = DateConverter.toMillis(endDate.plusDays(1));
 
-    // On recherche la liste des enregistrements qui ont une date comprise entre startDate et endDate en les groupant
-    // par date.
-    return recordRepository.findByTimestampBetween(startDateMillis, endDateMillis)
+    //System.out.println("startDateMillis : " + startDateMillis);
+    //System.out.println("endDateMillis : " + endDateMillis);
+
+    Map<LocalDate, Long> records = recordRepository.findByTimestampBetweenOrderByTimestamp(startDateMillis, endDateMillis)
       .stream()
       .collect(
         Collectors.groupingBy(record -> {
             LocalDate date = DateConverter.toLocaldate(record.getTimestamp());
             return date;
           }
-          , Collectors.summingLong(Record::getTimestamp)
+          , Collectors.summingLong(Record::getValue)
         ));
+
+    // Ceci permet d'ordonner les enregistrements par date croissante.
+    records = new TreeMap<LocalDate, Long>(records);
+
+    //System.out.println("records.keySet().toString() = " + records.keySet().toString());
+    Iterator<Long> iterator = records.values().iterator();
+
+    /*while(iterator.hasNext()) {
+      System.out.println("records.value = " + iterator.next());
+    }*/
+
+    // On recherche la liste des enregistrements qui ont une date comprise entre startDate et endDate en les groupant
+    // par date.
+    return records;
   }
 }
