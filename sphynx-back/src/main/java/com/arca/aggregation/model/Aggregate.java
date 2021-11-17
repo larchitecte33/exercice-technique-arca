@@ -26,4 +26,8 @@ public class Aggregate {
   public long getAggregateValue() {
     return aggregateValue;
   }
+
+  public void setAggregateValue(long value) {
+    this.aggregateValue = value;
+  }
 }

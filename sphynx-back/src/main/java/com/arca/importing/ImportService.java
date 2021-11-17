@@ -97,7 +97,7 @@ public class ImportService {
         allocatedMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
         presumableFreeMemory = Runtime.getRuntime().maxMemory() - allocatedMemory;
 
-        if (lineNumber % (totalNbLines / 1000000) == 0) {
+        if (lineNumber % (totalNbLines / (totalNbLines / 100)) == 0) { // 1000000
           websocketMessaging.sendProgress(totalNbLines, lineNumber + 1);
         }
 
@@ -105,7 +105,7 @@ public class ImportService {
         aggregateService.add(Aggregate.from(rec));
         records.add(rec);
 
-        if(lineNumber % 1000000 == 0) {
+        if(lineNumber % (totalNbLines / 100) == 0) { // 1000000
           recordRepositoryService.saveAll(records);
           importStatusService.saveImportLineNumber(lineNumber);
           records.clear();

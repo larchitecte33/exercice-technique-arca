@@ -45,21 +45,45 @@ public class AggregateService {
       .map(entry -> new Aggregate(entry.getKey(), entry.getValue()))
       .collect(Collectors.toList());
 
-    /*for(int i = 0 ; i < listeAggregate.size() ; i++) {
-      System.out.println("CountryName : " + listeAggregate.get(i).getCountry().getName());
-      System.out.println("Value : " + listeAggregate.get(i).getAggregateValue());
-    }*/
+    return listeAggregate;
+  }
+
+  public List<Aggregate> getAggregatesBetweenDates(LocalDate dateDebut, LocalDate dateFin) {
+    System.out.println("dateDebut = " + dateDebut.toString());
+    Long startDateMillis = DateConverter.toMillis(dateDebut);
+    Long endDateMillis = DateConverter.toMillis(dateFin.plusDays(1));
+
+    List<Record> records = recordRepository.findByTimestampBetweenOrderByTimestamp(startDateMillis, endDateMillis);
+
+    List<Aggregate> listeAggregate = new ArrayList<>();
+    boolean isAggregateTrouve = false;
+    int j = 0;
+
+    for(int i = 0 ; i < records.size() ; i++) {
+      j = 0;
+      isAggregateTrouve = false;
+
+      while(j < listeAggregate.size() && (!isAggregateTrouve)) {
+        if (listeAggregate.get(j).getCountry().getName().equals(records.get(i).getCountry().getName())) {
+          listeAggregate.get(j).setAggregateValue(listeAggregate.get(j).getAggregateValue() + records.get(i).getValue());
+          isAggregateTrouve = true;
+        }
+
+        j++;
+      }
+
+      if(!isAggregateTrouve) {
+        Aggregate aggregate = new Aggregate(records.get(i).getCountry(), records.get(i).getValue());
+        listeAggregate.add(aggregate);
+      }
+    }
 
     return listeAggregate;
   }
 
-
   public Map<LocalDate, Long> getTotalByDay(LocalDate startDate, LocalDate endDate) {
     Long startDateMillis = DateConverter.toMillis(startDate);
     Long endDateMillis = DateConverter.toMillis(endDate.plusDays(1));
-
-    //System.out.println("startDateMillis : " + startDateMillis);
-    //System.out.println("endDateMillis : " + endDateMillis);
 
     Map<LocalDate, Long> records = recordRepository.findByTimestampBetweenOrderByTimestamp(startDateMillis, endDateMillis)
       .stream()
@@ -73,13 +97,6 @@ public class AggregateService {
 
     // Ceci permet d'ordonner les enregistrements par date croissante.
     records = new TreeMap<LocalDate, Long>(records);
-
-    //System.out.println("records.keySet().toString() = " + records.keySet().toString());
-    Iterator<Long> iterator = records.values().iterator();
-
-    /*while(iterator.hasNext()) {
-      System.out.println("records.value = " + iterator.next());
-    }*/
 
     // On recherche la liste des enregistrements qui ont une date comprise entre startDate et endDate en les groupant
     // par date.

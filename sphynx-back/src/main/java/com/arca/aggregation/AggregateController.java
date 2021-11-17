@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,16 @@ public class AggregateController {
   @GetMapping("/aggregate")
   public List<Aggregate> getAggregates() {
     return aggregateService.getAggregates();
+  }
+
+  @GetMapping("/aggregateBetweenDates")
+  public List<Aggregate> getAggregatesBetweenDates(@RequestParam("from")
+                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                       LocalDateTime startDate,
+                                                   @RequestParam("to")
+                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                     LocalDateTime endDate) {
+    return aggregateService.getAggregatesBetweenDates(startDate.toLocalDate(), endDate.toLocalDate());
   }
 
   @GetMapping("/dailyTotal")
