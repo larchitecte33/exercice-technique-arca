@@ -16,18 +16,6 @@
       <input type="radio" name="granularites" value="{{granularite}}" (change)="radioChangeHandler($event)">
       {{granularite}}
     </div>
-    <!--<div class="white">
-      <input type="radio" id="rbJour" name="rgGranularite" value="Jour">
-      <label for="rbJour">Jour</label>
-    </div>
-    <div class="white">
-      <input type="radio" id="rbMois" name="rgGranularite" value="Mois">
-      <label for="rbMois">Mois</label>
-    </div>
-    <div class="white">
-      <input type="radio" id="rbAn" name="rgGranularite" value="An">
-      <label for="rbAn">An</label>
-    </div>-->
     
     <div class="white">
       <label for="annee">Choix de l'année : </label>
@@ -35,7 +23,7 @@
     </div>
 
 
-    <p>Vous avez sélectionné : {{selectedGranularite}}</p>
+    <button [routerLink]="['/aggregation']" [queryParams]="{dateDebut: startDate, dateFin: endDate}">Visualiser le tableau</button>
   </div>
   <canvas id="canvas">{{ chart }}</canvas>
 </div>
