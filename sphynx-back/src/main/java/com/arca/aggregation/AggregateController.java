@@ -20,14 +20,20 @@ public class AggregateController {
   private AggregateService aggregateService;
 
   /**
-   * Fonction qui va chercher la map aggregates contenue dans AggregateService sous forme de liste d'Aggregate.
-   * @return la map aggregates contenue dans AggregateService sous forme de liste d'Aggregate.
+   * Fonction qui va permettre d'aller chercher la somme des données par pays.
+   * @return une liste d'Aggregate correspondant à la somme des données par pays.
    */
   @GetMapping("/aggregate")
   public List<Aggregate> getAggregates() {
     return aggregateService.getAggregates();
   }
 
+  /**
+   * Fonction qui va permettre d'aller chercher la somme des données par pays entre deux dates.
+   * @param startDate : date de début.
+   * @param endDate : date de fin.
+   * @return une liste d'Aggregate correspondant à la somme des données par pays entre startDate et endDate.
+   */
   @GetMapping("/aggregateBetweenDates")
   public List<Aggregate> getAggregatesBetweenDates(@RequestParam("from")
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -38,6 +44,13 @@ public class AggregateController {
     return aggregateService.getAggregatesBetweenDates(startDate.toLocalDate(), endDate.toLocalDate());
   }
 
+  /**
+   * Va chercher la somme des données par jour, toutes sources confondues.
+   * @param startDate : date de début.
+   * @param endDate : date de fin.
+   * @param autrePays : autre pays pour lequel chercher la somme des données par jour.
+   * @return
+   */
   @GetMapping("/dailyTotal")
   public List<Map<LocalDate, Long>> getTotalByDay(@RequestParam("from")
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

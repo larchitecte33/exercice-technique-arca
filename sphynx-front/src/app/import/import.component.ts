@@ -23,7 +23,6 @@ export class ImportComponent implements OnInit, ProgressListener {
 
   onProgress(progress: ProgressDto) {
     this.progressPercentage = progress.getPercentage();
-    console.log(this.progressPercentage);
   }
 
   startImport() {

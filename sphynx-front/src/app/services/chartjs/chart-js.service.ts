@@ -34,7 +34,6 @@ export class ChartJsService {
 
     // Si la granularité correspond au mois
     if(granularite == "Mois") {
-      console.log("Granularité Mois");
       // On parcourt toutes les dates.
       labels.forEach((element, index) => {
         // S'il existe une chaine qui correspond à la date sans le jour (mm/aaaa), alors on ajoute la valeur à la valeur 
@@ -68,11 +67,8 @@ export class ChartJsService {
 
       // On parcourt toutes les dates.
       labels.forEach((element, index) => {
-        console.log("element : " + element);
         date = DateTime.fromFormat(element, 'yyyy-MM-dd');
-        console.log("date : " + date);
         weekNumber = DateTime.local(date.year, date.month, date.day).weekNumber;
-        console.log("weeknumber of " + element + " : " + weekNumber);
 
         if(arrayLabels.indexOf(weekNumber) != -1) {
           let indexElem = arrayLabels.indexOf(weekNumber);
@@ -125,8 +121,6 @@ export class ChartJsService {
         data.push(element);
       });
     }
-
-    console.log("labels.length : " + labels.length);
 
     return new Chart("canvas", {
       type: 'line',

@@ -4,12 +4,13 @@ import com.arca.database.RepositoryException;
 
 import javax.persistence.*;
 
+// Classe métier représentant un enregistrement.
 @Entity (name = "record")
 public class Record {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
+    private Integer id; // L'identifiant de l'enregistrement.
 
     @Column(name = "timestamp")
     private long timestamp; // Le timestamp de l'enregistrement.

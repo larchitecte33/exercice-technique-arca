@@ -34,8 +34,6 @@ public class AggregateService {
 
     Long oldValue = aggregates.get(aggregate.getCountry());
     aggregates.put(aggregate.getCountry(), oldValue + aggregate.getAggregateValue());
-
-    //System.out.println(aggregate.getCountry().getName() + " : " + String.valueOf(oldValue + aggregate.getAggregateValue()));
   }
 
   // Retourne la Map aggregates sous forme de liste d'Aggregate.
@@ -49,7 +47,6 @@ public class AggregateService {
   }
 
   public List<Aggregate> getAggregatesBetweenDates(LocalDate dateDebut, LocalDate dateFin) {
-    System.out.println("dateDebut = " + dateDebut.toString());
     Long startDateMillis = DateConverter.toMillis(dateDebut);
     Long endDateMillis = DateConverter.toMillis(dateFin.plusDays(1));
 
@@ -82,8 +79,6 @@ public class AggregateService {
   }
 
   public List<Map<LocalDate, Long>> getTotalByDay(LocalDate startDate, LocalDate endDate, String autrePays) {
-    System.out.println("autrePays = " + autrePays);
-
     Long startDateMillis = DateConverter.toMillis(startDate);
     Long endDateMillis = DateConverter.toMillis(endDate.plusDays(1));
 

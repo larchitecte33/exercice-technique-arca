@@ -84,8 +84,6 @@ export class ChartComponent implements OnInit {
           autrePays: "" + this.autrePays
         }
       }).subscribe(value => {
-        console.log("Object.keys(value[0]).length : " + Object.keys(value[0]).length);
-
         // value[0] : clés-valeurs pour le diagramme de tous les pays.
         // value[1] : clés-valeurs pour le diagramme du pays supplémentaire.
         if(this.autrePays != "") {

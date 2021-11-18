@@ -63,7 +63,7 @@ public class ImportService {
 
   public void startImport() {
     isImporting = true;
-    //System.out.println("Start import");
+
     // On crée un DataFile représentant un fichier à partir du chemin du fichier lu dans application.properties.
     DataFile dataFile = dataFileFactory.createFromProperties();
     checkThatDataFileExists(dataFile);
@@ -81,21 +81,11 @@ public class ImportService {
 
       String line;
       ArrayList<Record> records = new ArrayList<>();
-      long presumableFreeMemory, allocatedMemory;
 
       // Tant qu'il reste des lignes à lire
       while ((line = bufr.readLine()) != null && isImporting) {
         // On construit un Record à partir de la ligne lue
         Record rec = Record.from(line);
-
-        // Si le numéro de la ligne lue est divisible par 1000, on envoie la progression du traitement (nombre de lignes
-        // lues + total lignes)
-        /*if (lineNumber % 1000 == 0) { // each 1000 lines
-          websocketMessaging.sendProgress(totalNbLines, lineNumber);
-        }*/
-
-        allocatedMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
-        presumableFreeMemory = Runtime.getRuntime().maxMemory() - allocatedMemory;
 
         if (lineNumber % (totalNbLines / (totalNbLines / 100)) == 0) { // 1000000
           websocketMessaging.sendProgress(totalNbLines, lineNumber + 1);
