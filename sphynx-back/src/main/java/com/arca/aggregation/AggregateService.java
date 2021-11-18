@@ -81,10 +81,14 @@ public class AggregateService {
     return listeAggregate;
   }
 
-  public Map<LocalDate, Long> getTotalByDay(LocalDate startDate, LocalDate endDate) {
+  public List<Map<LocalDate, Long>> getTotalByDay(LocalDate startDate, LocalDate endDate, String autrePays) {
+    System.out.println("autrePays = " + autrePays);
+
     Long startDateMillis = DateConverter.toMillis(startDate);
     Long endDateMillis = DateConverter.toMillis(endDate.plusDays(1));
 
+    ArrayList<Map<LocalDate, Long>> listeRecords;
+    Map<LocalDate, Long> recordsAutrePays = null;
     Map<LocalDate, Long> records = recordRepository.findByTimestampBetweenOrderByTimestamp(startDateMillis, endDateMillis)
       .stream()
       .collect(
@@ -98,8 +102,31 @@ public class AggregateService {
     // Ceci permet d'ordonner les enregistrements par date croissante.
     records = new TreeMap<LocalDate, Long>(records);
 
+    if(!autrePays.equals("")) {
+      Country country = new Country();
+      country.setName(autrePays);
+
+      recordsAutrePays =
+        recordRepository.findByCountryAndTimestampBetweenOrderByTimestamp(country.getName(), startDateMillis, endDateMillis)
+        .stream()
+        .collect(
+          Collectors.groupingBy(record -> {
+              LocalDate date = DateConverter.toLocaldate(record.getTimestamp());
+              return date;
+            }
+            , Collectors.summingLong(Record::getValue)
+          ));
+
+      // Ceci permet d'ordonner les enregistrements par date croissante.
+      recordsAutrePays = new TreeMap<LocalDate, Long>(recordsAutrePays);
+    }
+
+    listeRecords = new ArrayList<>();
+    listeRecords.add(records);
+    listeRecords.add(recordsAutrePays);
+
     // On recherche la liste des enregistrements qui ont une date comprise entre startDate et endDate en les groupant
     // par date.
-    return records;
+    return listeRecords;
   }
 }

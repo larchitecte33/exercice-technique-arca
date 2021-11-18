@@ -22,6 +22,7 @@
       <input type="number" id="annee" name="annee" [(ngModel)]="example" (change)="yearChangeHandler()">
     </div>
 
+    <input type="text" id="autrePays" name="autrePays" placeholder="Autre pays" (change)="autrePaysChangeEvent($event)" />
 
     <button [routerLink]="['/aggregation']" [queryParams]="{dateDebut: startDate, dateFin: endDate}">Visualiser le tableau</button>
   </div>

@@ -28,10 +28,7 @@ export class ChartJsService {
     }
   }
 
-  buildChart(canvasId: String, labels: String[], data: String[], granularite: String) {
-    console.log("labels : " + labels);
-    console.log("data : " + data);
-
+  buildChart(canvasId: String, labels: String[], data: String[], data2: String[], granularite: String) {
     let arrayLabels = new Array();
     let arrayData = new Array();
 
@@ -66,10 +63,7 @@ export class ChartJsService {
       });
     }
     // Si la granularité correspond à la semaine
-    else if(granularite == "Semaine") {
-      console.log("Granularité Semaine");
-      console.log("DateTime.local(2017, 5, 25).weekNumber : " + DateTime.local(2017, 5, 25).weekNumber);
-      let weekNumber = -1;
+    else if(granularite == "Semaine") {let weekNumber = -1;
       let date = null;
 
       // On parcourt toutes les dates.
@@ -104,7 +98,6 @@ export class ChartJsService {
     }
     // Si la granularité correspond à l'année
     else if(granularite == "An") {
-      console.log("Granularité An");
       // On parcourt toutes les dates.
       labels.forEach((element, index) => {
         // S'il existe une chaine qui correspond à l'année, alors on ajoute la valeur à la valeur 
@@ -132,14 +125,8 @@ export class ChartJsService {
         data.push(element);
       });
     }
-    else if(granularite == "Jour") {
-      console.log("Granularité jour");
-      console.log("labels : " + labels);
-      console.log("data : " + data);
-    }
 
-    console.log("arrayLabel : " + arrayLabels);
-    console.log("arrayData : " + arrayData);
+    console.log("labels.length : " + labels.length);
 
     return new Chart("canvas", {
       type: 'line',
@@ -150,6 +137,11 @@ export class ChartJsService {
             label: 'Total value',
             data: data,
             backgroundColor: 'rgba(240, 50, 50, 0.5)'
+          },
+          {
+            label: 'Value data2',
+            data: data2,
+            backgroundColor: 'rgba(40, 250, 50, 0.5)'
           }
         ]
       },

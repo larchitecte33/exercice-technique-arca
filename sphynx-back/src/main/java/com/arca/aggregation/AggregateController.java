@@ -39,13 +39,14 @@ public class AggregateController {
   }
 
   @GetMapping("/dailyTotal")
-  public Map<LocalDate, Long> getTotalByDay(@RequestParam("from")
+  public List<Map<LocalDate, Long>> getTotalByDay(@RequestParam("from")
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                 LocalDateTime startDate,
                                             @RequestParam("to")
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                              LocalDateTime endDate) {
-    return aggregateService.getTotalByDay(startDate.toLocalDate(), endDate.toLocalDate());
+                                              LocalDateTime endDate,
+                                            @RequestParam String autrePays) {
+    return aggregateService.getTotalByDay(startDate.toLocalDate(), endDate.toLocalDate(), autrePays);
   }
 
 }
